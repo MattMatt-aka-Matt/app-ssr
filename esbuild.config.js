@@ -1,5 +1,6 @@
 const esbuild = require('esbuild');
 
+
 esbuild.build({
   entryPoints: ['server/server.jsx'],
   outfile: 'build/server.js',
