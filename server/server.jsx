@@ -8,7 +8,6 @@ import App from "../src/App.jsx";
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-
 async function fetchTodos() {
   try {
     const response = await fetch('https://jsonplaceholder.typicode.com/todos');
@@ -24,27 +23,28 @@ async function fetchTodos() {
 }
 
 app.get("/", async (req, res) => {
-  const todos = await fetchTodos();
+  try {
+    const todos = await fetchTodos();
 
-  fs.readFile(path.resolve("./index.html"), "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).send("An error occurred");
-    }
+    fs.readFile(path.resolve("./index.html"), "utf8", (err, data) => {
+      if (err) {
+        return res.status(500).send("An error occurred");
+      }
 
-    const appHtml = ReactDOMServer.renderToStaticMarkup(<App todos={todos} />);
+      const appHtml = ReactDOMServer.renderToStaticMarkup(<App todos={todos} />);
 
-    const html = data.replace(
-      '<div id="root"></div>',
-      `<div id="root">${appHtml}</div>`
-    );
+      const html = data.replace(
+        '<div id="root"></div>',
+        `<div id="root">${appHtml}</div>`
+      );
 
-    res.send(html);
-  });
+      res.send(html);
+    });
+  } catch (error) {
+    console.error('Error in route:', error);
+    res.status(500).send("Error loading todos");
+  }
 });
-
-app.use(
-  express.static(path.resolve(__dirname, "..", "build"), { maxAge: "30d" })
-);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

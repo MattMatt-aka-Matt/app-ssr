@@ -1,6 +1,6 @@
 # SSR Todos App
 
-Application SSR avec React et Express
+Application SSR avec React et Express affichant les tâches de JSONPlaceholder.
 
 ## Installation
 
